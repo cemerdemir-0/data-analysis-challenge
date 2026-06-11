@@ -2,17 +2,252 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Sayza - Kayıt Ol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAYZA | Kayıt Ol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F2EDE4;
+            --ink: #0D0D0D;
+            --green: #1C3D2E;
+            --lime: #C8F135;
+            --border: 1px solid #0D0D0D;
+            --muted: #6B6B6B;
+            --error: #C0392B;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--cream);
+            color: var(--ink);
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .r1 { animation: revealUp 0.5s ease 0.05s both; }
+        .r2 { animation: revealUp 0.5s ease 0.2s  both; }
+
+        /* Header */
+        header {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--cream);
+            border-bottom: var(--border);
+            padding: 0 40px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-weight: 900;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+        }
+        .logo-highlight {
+            background: var(--green);
+            color: var(--lime);
+            padding: 2px 7px;
+        }
+        nav { display: flex; gap: 28px; }
+        nav a {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ink);
+            text-decoration: none;
+            padding-bottom: 2px;
+            border-bottom: 1.5px solid transparent;
+        }
+        nav a:hover, nav a.active { border-color: var(--ink); }
+
+        /* Page layout */
+        .page {
+            display: grid;
+            grid-template-columns: 1fr 480px 1fr;
+            min-height: calc(100vh - 60px);
+        }
+
+        .form-col {
+            grid-column: 2;
+            padding: 64px 0 80px;
+        }
+
+        /* Flash messages */
+        .flash {
+            padding: 12px 16px;
+            border: var(--border);
+            margin-bottom: 24px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .flash.success { background: var(--lime); }
+        .flash.danger  { background: #FFD6D6; }
+
+        /* Form */
+        .form-title {
+            font-family: 'Fraunces', serif;
+            font-weight: 900;
+            font-size: 52px;
+            line-height: 1.0;
+            letter-spacing: -2px;
+            margin-bottom: 8px;
+        }
+        .form-title em {
+            font-style: italic;
+            color: var(--green);
+        }
+
+        .form-sub {
+            font-size: 14px;
+            color: var(--muted);
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--ink);
+            padding: 10px 0;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 16px;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        input:focus { border-color: var(--green); }
+
+        .field-error {
+            font-size: 12px;
+            color: var(--error);
+            margin-top: 6px;
+        }
+
+        .submit-btn {
+            margin-top: 12px;
+            width: 100%;
+            background: var(--ink);
+            color: var(--cream);
+            border: var(--border);
+            box-shadow: 4px 4px 0 var(--green);
+            padding: 14px 24px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: box-shadow 0.1s, transform 0.1s;
+        }
+        .submit-btn:hover {
+            box-shadow: 6px 6px 0 var(--green);
+        }
+        .submit-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--green);
+        }
+
+        .login-link {
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--muted);
+            text-align: center;
+        }
+        .login-link a {
+            color: var(--green);
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid var(--green);
+        }
+    </style>
 </head>
 <body>
-    <div style="text-align: center; margin-top: 50px;">
-        <h2>Sayza'ya Hoş Geldiniz</h2>
-        <form>
-            <input type="text" placeholder="Kullanıcı Adı"><br><br>
-            <input type="email" placeholder="E-posta"><br><br>
-            <input type="password" placeholder="Şifre"><br><br>
-            <button type="submit">Kayıt Ol</button>
+
+<header class="r1">
+    <div class="logo">SAY<span class="logo-highlight">ZA</span></div>
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/register" class="active">Kayıt Ol</a>
+    </nav>
+</header>
+
+<div class="page">
+    <div class="form-col r2">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <h1 class="form-title">Hesap<br><em>Oluştur</em></h1>
+        <p class="form-sub">SAYZA analitik platformuna katıl.</p>
+
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username(placeholder="kullanici_adi") }}
+                {% for error in form.username.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                {{ form.email.label }}
+                {{ form.email(placeholder="ornek@eposta.com") }}
+                {% for error in form.email.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                {{ form.password.label }}
+                {{ form.password(placeholder="••••••••") }}
+                {% for error in form.password.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                {{ form.confirm_password.label }}
+                {{ form.confirm_password(placeholder="••••••••") }}
+                {% for error in form.confirm_password.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            {{ form.submit(class="submit-btn") }}
         </form>
+
+        <p class="login-link">Zaten hesabın var mı? <a href="/">Giriş Yap</a></p>
     </div>
+</div>
+
 </body>
 </html>

@@ -4,59 +4,314 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAYZA | Müşteri Analitiği</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .dashboard-header { 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
-            color: white; 
-            padding: 30px; 
-            border-radius: 0 0 20px 20px; 
-            margin-bottom: 30px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+        :root {
+            --cream: #F2EDE4;
+            --ink: #0D0D0D;
+            --green: #1C3D2E;
+            --lime: #C8F135;
+            --border: 1px solid #0D0D0D;
+            --muted: #6B6B6B;
         }
-        .card { border-radius: 15px; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .stat-card { background: white; padding: 25px; text-align: center; border-bottom: 5px solid #2a5298; }
-        .stat-card h3 { color: #1e3c72; font-weight: bold; }
-        .graph-container { min-height: 500px; }
-        .table-container { max-height: 400px; overflow-y: auto; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--cream);
+            color: var(--ink);
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* One load animation — reveals sections in sequence */
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .r1 { animation: revealUp 0.5s ease 0.05s both; }
+        .r2 { animation: revealUp 0.5s ease 0.2s  both; }
+        .r3 { animation: revealUp 0.5s ease 0.35s both; }
+
+        /* ── Header ── */
+        header {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--cream);
+            border-bottom: var(--border);
+            padding: 0 40px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-weight: 900;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        .logo-highlight {
+            background: var(--green);
+            color: var(--lime);
+            padding: 2px 7px;
+        }
+
+        nav { display: flex; gap: 28px; }
+        nav a {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ink);
+            text-decoration: none;
+            padding-bottom: 2px;
+            border-bottom: 1.5px solid transparent;
+            transition: border-color 0.15s;
+        }
+        nav a:hover { border-color: var(--ink); }
+        nav a.active { border-color: var(--green); color: var(--green); }
+
+        /* ── Layout ── */
+        .layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            border-right: var(--border);
+            padding: 36px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 8px;
+        }
+
+        /* Neo-brutalist metric card */
+        .metric-card {
+            background: white;
+            border: var(--border);
+            box-shadow: 3px 3px 0 var(--ink);
+            padding: 18px 20px;
+        }
+        .metric-card-label {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        .metric-card-value {
+            font-family: 'Fraunces', serif;
+            font-weight: 900;
+            font-size: 44px;
+            line-height: 1;
+            color: var(--green);
+        }
+        .metric-card-sub {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .divider {
+            border: none;
+            border-top: var(--border);
+            margin: 8px 0;
+        }
+
+        /* Segment cards */
+        .segment-card {
+            border: var(--border);
+            padding: 14px 16px;
+            background: white;
+        }
+        .segment-card + .segment-card { border-top: none; }
+
+        .segment-name {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dot {
+            width: 10px; height: 10px;
+            border: 1px solid var(--ink);
+            flex-shrink: 0;
+        }
+        .dot-champion  { background: #2563EB; }
+        .dot-loyal     { background: #16A34A; }
+        .dot-risk      { background: #D4845A; }
+        .dot-lost      { background: #9CA3AF; }
+
+        .segment-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 12px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .segment-stats strong { color: var(--ink); }
+
+        .segment-count {
+            font-family: 'Fraunces', serif;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        /* ── Main content ── */
+        .main {
+            padding: 48px 44px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .headline {
+            font-family: 'Fraunces', serif;
+            font-weight: 900;
+            font-size: 62px;
+            line-height: 1.0;
+            letter-spacing: -2px;
+        }
+        .headline em {
+            font-style: italic;
+            color: var(--green);
+        }
+
+        .subline {
+            font-size: 15px;
+            color: var(--muted);
+            max-width: 500px;
+            margin-top: 12px;
+            font-weight: 300;
+        }
+
+        /* Chart container */
+        .chart-box {
+            border: var(--border);
+            background: white;
+            flex: 1;
+        }
+        .chart-box-header {
+            padding: 12px 18px;
+            border-bottom: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chart-box-title {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--green);
+        }
+        .chart-box-meta {
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .chart-inner {
+            padding: 8px;
+            min-height: 480px;
+        }
+        .chart-inner > div { height: 480px; }
     </style>
 </head>
 <body>
-    <div class="container-fluid px-4">
-        <div class="dashboard-header text-center">
-            <h1>SAYZA Dashboard</h1>
-            <p class="lead">Yapay Zeka Destekli Stratejik Müşteri Segmentasyonu</p>
-        </div>
-        
-        <div class="row mb-4 justify-content-center">
-            <div class="col-md-4">
-                <div class="card stat-card">
-                    <h5>Analiz Edilen Müşteri</h5>
-                    <h3>{{ toplam_musteri }}</h3>
-                </div>
+
+<header class="r1">
+    <div class="logo">SAY<span class="logo-highlight">ZA</span></div>
+    <nav>
+        <a href="/" class="active">Dashboard</a>
+        <a href="/register">Kayıt Ol</a>
+    </nav>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar r2">
+        <p class="sidebar-label">Analiz Özeti</p>
+
+        <div class="metric-card">
+            <div class="metric-card-label">Toplam Müşteri</div>
+            <div class="metric-card-value">{{ toplam_musteri }}</div>
+            <div class="metric-card-sub">
+                {{ n_clusters }} segment &nbsp;·&nbsp; K-Means (k={{ n_clusters }})
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="card p-4">
-                    <h4 class="mb-4">Müşteri Kümeleme (3D RFM Analizi)</h4>
-                    <div class="graph-container">
-                        {{ grafik|safe }}
-                    </div>
-                </div>
+        <hr class="divider">
+        <p class="sidebar-label">Segmentler</p>
+
+        {% set dot_map = {
+            "Şampiyonlar":      "dot-champion",
+            "Sadık Müşteriler": "dot-loyal",
+            "Risk Altındakiler":"dot-risk",
+            "Kaybedilenler":    "dot-lost"
+        } %}
+
+        <div>
+        {% for row in segment_list %}
+        <div class="segment-card">
+            <div class="segment-name">
+                <span class="dot {{ dot_map.get(row.Segment_Adi, '') }}"></span>
+                {{ row.Segment_Adi }}
             </div>
-            <div class="col-lg-4">
-                <div class="card p-4">
-                    <h4 class="mb-4">Segment Örneği</h4>
-                    <div class="table-container">
-                        {{ tablo|safe }}
-                    </div>
-                    <p class="text-muted mt-3 small">* Cem'in hazırladığı K-Means (k=4) modeli kullanılmıştır.</p>
-                </div>
+            <div class="segment-count">{{ row.Musteri_Sayisi }}</div>
+            <div class="segment-stats">
+                <span>Recency</span>
+                <strong>{{ "%.0f"|format(row.Recency_Ort) }} gün</strong>
+                <span>Frekans</span>
+                <strong>{{ "%.1f"|format(row.Frequency_Ort) }} fatura</strong>
+                <span>Harcama</span>
+                <strong>£{{ "%.0f"|format(row.Monetary_Ort) }}</strong>
             </div>
         </div>
-    </div>
+        {% endfor %}
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main r3">
+        <div>
+            <h1 class="headline">Müşteri<br><em>Segmentasyonu</em></h1>
+            <p class="subline">
+                RFM analizi ve K-Means kümeleme ile {{ toplam_musteri }} müşteri
+                {{ n_clusters }} anlamlı segmente ayrıldı.
+            </p>
+        </div>
+
+        <div class="chart-box">
+            <div class="chart-box-header">
+                <span class="chart-box-title">3D RFM Uzayında Kümeleme</span>
+                <span class="chart-box-meta">Recency · Frequency · Monetary</span>
+            </div>
+            <div class="chart-inner">
+                {{ grafik|safe }}
+            </div>
+        </div>
+    </main>
+
+</div>
 </body>
 </html>
