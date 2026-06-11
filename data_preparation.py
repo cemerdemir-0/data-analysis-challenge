@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def load_and_prepare_data(filepath: str, nrows: int = None):
+def load_and_prepare_data(filepath: str, nrows: int = None, return_raw: bool = False):
     if filepath.endswith(".csv"):
         df = pd.read_csv(filepath, nrows=nrows)
     else:
@@ -35,4 +35,6 @@ def load_and_prepare_data(filepath: str, nrows: int = None):
     # Negatif monetary kalan edge-case'leri temizle
     rfm = rfm[rfm["Monetary"] > 0]
 
+    if return_raw:
+        return df, rfm
     return rfm

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAYZA — Yapay Zeka Destekli Müşteri Analitiği</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700;1,9..144,900&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F2EDE4;
+            --ink: #0D0D0D;
+            --green: #1C3D2E;
+            --lime: #C8F135;
+            --border: 1px solid #0D0D0D;
+            --border-light: 1px solid rgba(255,255,255,0.15);
+            --muted: #6B6B6B;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--cream);
+            color: var(--ink);
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── Scroll reveal ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(36px);
+            transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1),
+                        transform 0.8s cubic-bezier(0.16,1,0.3,1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.45s; }
+
+        /* ── Header ── */
+        header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+            height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 48px;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        header.scrolled {
+            background: rgba(242,237,228,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: var(--border);
+        }
+        .logo {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 22px; letter-spacing: -0.5px;
+            text-decoration: none; color: var(--ink);
+        }
+        .logo-hl { background: var(--green); color: var(--lime); padding: 2px 7px; }
+        .header-nav { display: flex; align-items: center; gap: 32px; }
+        .nav-link {
+            font-size: 13px; font-weight: 500; color: var(--ink);
+            text-decoration: none; border-bottom: 1.5px solid transparent;
+            padding-bottom: 2px; transition: border-color 0.15s;
+        }
+        .nav-link:hover { border-color: var(--ink); }
+        .btn-primary {
+            background: var(--ink); color: var(--cream);
+            border: var(--border);
+            box-shadow: 3px 3px 0 var(--green);
+            padding: 9px 20px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 12px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase;
+            text-decoration: none; cursor: pointer;
+            transition: box-shadow 0.1s, transform 0.1s;
+            display: inline-block;
+        }
+        .btn-primary:hover { box-shadow: 5px 5px 0 var(--green); }
+        .btn-primary:active { transform: translate(1px,1px); box-shadow: 2px 2px 0 var(--green); }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            padding: 100px 48px 60px;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 60px;
+            align-items: center;
+            border-bottom: var(--border);
+        }
+
+        /* Hero: one beautiful load animation */
+        .hero-left { }
+        .hero-eyebrow {
+            font-size: 11px; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--green); margin-bottom: 24px;
+            opacity: 0; animation: heroIn 0.6s ease 0.1s forwards;
+        }
+        .hero-title {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: clamp(52px, 6vw, 88px);
+            line-height: 1.0; letter-spacing: -3px;
+            margin-bottom: 28px;
+            opacity: 0; animation: heroIn 0.7s ease 0.2s forwards;
+        }
+        .hero-title em { font-style: italic; color: var(--green); }
+        .hero-sub {
+            font-size: 17px; color: var(--muted); font-weight: 300;
+            max-width: 480px; line-height: 1.7; margin-bottom: 40px;
+            opacity: 0; animation: heroIn 0.7s ease 0.35s forwards;
+        }
+        .hero-cta {
+            display: flex; align-items: center; gap: 20px;
+            opacity: 0; animation: heroIn 0.7s ease 0.5s forwards;
+        }
+        .btn-ghost {
+            font-size: 13px; font-weight: 500; color: var(--ink);
+            text-decoration: none; border-bottom: 1.5px solid var(--ink);
+            padding-bottom: 2px;
+        }
+
+        @keyframes heroIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero right: stat card */
+        .hero-right {
+            opacity: 0; animation: heroIn 0.8s ease 0.4s forwards;
+        }
+        .stat-widget {
+            border: var(--border);
+            box-shadow: 6px 6px 0 var(--ink);
+            background: white;
+        }
+        .stat-widget-header {
+            padding: 14px 20px; border-bottom: var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .stat-widget-title {
+            font-size: 10px; font-weight: 600;
+            letter-spacing: 2.5px; text-transform: uppercase; color: var(--green);
+        }
+        .stat-widget-badge {
+            font-size: 10px; background: var(--lime);
+            border: 1px solid var(--ink); padding: 2px 8px;
+            font-weight: 600;
+        }
+        .stat-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            border-bottom: var(--border);
+        }
+        .stat-cell {
+            padding: 20px 20px 16px;
+            border-right: var(--border);
+        }
+        .stat-cell:nth-child(even) { border-right: none; }
+        .stat-cell:nth-child(3), .stat-cell:nth-child(4) { border-top: var(--border); }
+        .stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+        .stat-value { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 900; line-height: 1; }
+        .stat-value.green { color: var(--green); }
+        .stat-footer {
+            padding: 12px 20px; font-size: 12px; color: var(--muted);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .live-dot {
+            width: 7px; height: 7px; background: #22C55E;
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+        }
+
+        /* ── Problem section (dark) ── */
+        .problem-section {
+            background: var(--ink); color: var(--cream);
+            padding: 120px 48px;
+            border-bottom: var(--border);
+        }
+        .problem-inner {
+            max-width: 900px; margin: 0 auto;
+        }
+        .problem-tag {
+            font-size: 11px; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: rgba(255,255,255,0.4); margin-bottom: 32px;
+        }
+        .problem-quote {
+            font-family: 'Fraunces', serif; font-weight: 700;
+            font-size: clamp(36px, 4vw, 60px);
+            line-height: 1.15; letter-spacing: -1.5px;
+            margin-bottom: 48px;
+        }
+        .problem-quote em { font-style: italic; color: var(--lime); }
+        .problem-body {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+            padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.15);
+        }
+        .problem-col { }
+        .problem-col-title {
+            font-size: 13px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase;
+            color: rgba(255,255,255,0.4); margin-bottom: 16px;
+        }
+        .problem-col-text {
+            font-size: 16px; color: rgba(255,255,255,0.75);
+            line-height: 1.75; font-weight: 300;
+        }
+
+        /* ── Dashboard demo section ── */
+        .demo-section {
+            padding: 100px 48px;
+            border-bottom: var(--border);
+        }
+        .demo-header {
+            display: flex; align-items: flex-end;
+            justify-content: space-between; margin-bottom: 40px;
+        }
+        .demo-title {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: clamp(36px, 4vw, 56px);
+            letter-spacing: -2px; line-height: 1;
+        }
+        .demo-title em { font-style: italic; color: var(--green); }
+        .demo-sub {
+            font-size: 14px; color: var(--muted); max-width: 280px;
+            text-align: right; line-height: 1.6;
+        }
+
+        .demo-chart-box {
+            border: var(--border);
+            background: var(--ink);
+            margin-bottom: 1px;
+        }
+        .demo-chart-header {
+            padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .demo-chart-label {
+            font-size: 10px; font-weight: 600;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+        }
+        .demo-chart-dots { display: flex; gap: 6px; }
+        .demo-chart-dots span {
+            width: 10px; height: 10px; border-radius: 50%;
+        }
+        .demo-chart-inner { height: 420px; }
+        .demo-chart-inner > div { height: 420px !important; }
+
+        .demo-segments {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+        }
+        {% set demo_seg_colors = {"Şampiyonlar":"#2563EB","Sadık Müşteriler":"#16A34A","Risk Altındakiler":"#D4845A"} %}
+        .demo-seg-card {
+            border: var(--border); border-top: none;
+            padding: 20px 22px; background: white;
+        }
+        .demo-seg-card + .demo-seg-card { border-left: none; }
+        .demo-seg-name {
+            font-size: 12px; font-weight: 600; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .demo-seg-dot { width: 8px; height: 8px; border: 1px solid var(--ink); }
+        .demo-seg-count {
+            font-family: 'Fraunces', serif; font-size: 32px;
+            font-weight: 900; line-height: 1; margin-bottom: 8px;
+        }
+        .demo-seg-stats { font-size: 12px; color: var(--muted); }
+
+        /* ── Numbers section ── */
+        .numbers-section {
+            padding: 0;
+            border-bottom: var(--border);
+            display: grid; grid-template-columns: repeat(4, 1fr);
+        }
+        .number-cell {
+            padding: 60px 40px;
+            border-right: var(--border);
+        }
+        .number-cell:last-child { border-right: none; }
+        .number-eyebrow {
+            font-size: 10px; font-weight: 600;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: var(--muted); margin-bottom: 16px;
+        }
+        .number-value {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: clamp(40px, 4vw, 64px);
+            line-height: 1; letter-spacing: -2px; color: var(--green);
+        }
+        .number-desc { font-size: 13px; color: var(--muted); margin-top: 10px; }
+
+        /* ── How it works ── */
+        .how-section {
+            padding: 100px 48px;
+            display: grid; grid-template-columns: 300px 1fr;
+            gap: 80px; border-bottom: var(--border);
+        }
+        .how-left { }
+        .how-section-title {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 42px; letter-spacing: -1.5px; line-height: 1.1;
+        }
+        .how-section-title em { font-style: italic; color: var(--green); }
+        .how-section-sub {
+            font-size: 14px; color: var(--muted); margin-top: 20px; line-height: 1.7;
+        }
+        .how-steps { display: flex; flex-direction: column; }
+        .how-step {
+            display: grid; grid-template-columns: 60px 1fr;
+            gap: 24px; padding: 28px 0; border-bottom: var(--border);
+        }
+        .how-step:last-child { border-bottom: none; }
+        .how-step-num {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 36px; line-height: 1; color: #ddd;
+        }
+        .how-step-title {
+            font-family: 'Fraunces', serif; font-weight: 700;
+            font-size: 22px; margin-bottom: 8px; line-height: 1;
+        }
+        .how-step-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+        .how-step-tag {
+            display: inline-block; margin-top: 10px;
+            font-size: 10px; font-weight: 600;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            padding: 3px 10px; border: var(--border);
+            background: var(--cream);
+        }
+
+        /* ── CTA section (dark) ── */
+        .cta-section {
+            background: var(--green); color: var(--cream);
+            padding: 120px 48px;
+            display: grid; grid-template-columns: 1fr 400px;
+            gap: 60px; align-items: center;
+        }
+        .cta-title {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: clamp(44px, 5vw, 72px);
+            letter-spacing: -2.5px; line-height: 1;
+        }
+        .cta-title em { font-style: italic; color: var(--lime); }
+        .cta-sub {
+            font-size: 16px; color: rgba(255,255,255,0.6);
+            margin-top: 20px; line-height: 1.7; font-weight: 300;
+        }
+        .cta-right { display: flex; flex-direction: column; gap: 16px; }
+        .btn-cta {
+            background: var(--lime); color: var(--ink);
+            border: 2px solid var(--ink);
+            box-shadow: 5px 5px 0 var(--ink);
+            padding: 16px 28px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 14px; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase;
+            text-decoration: none; text-align: center;
+            transition: box-shadow 0.1s, transform 0.1s;
+        }
+        .btn-cta:hover { box-shadow: 7px 7px 0 var(--ink); }
+        .btn-cta:active { transform: translate(2px,2px); box-shadow: 3px 3px 0 var(--ink); }
+        .btn-cta-ghost {
+            background: transparent; color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 15px 28px; text-align: center;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 14px; font-weight: 500;
+            text-decoration: none;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .btn-cta-ghost:hover { border-color: rgba(255,255,255,0.7); color: white; }
+        .cta-note { font-size: 12px; color: rgba(255,255,255,0.4); text-align: center; }
+
+        /* ── Footer ── */
+        footer {
+            background: var(--ink); color: rgba(255,255,255,0.4);
+            padding: 32px 48px;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 12px;
+        }
+        footer .logo { color: white; font-size: 18px; }
+        footer .logo .logo-hl { background: rgba(255,255,255,0.1); color: var(--lime); }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header id="site-header">
+    <a href="/" class="logo">SAY<span class="logo-hl">ZA</span></a>
+    <div class="header-nav">
+        <a href="#demo" class="nav-link">Ürün</a>
+        <a href="#how" class="nav-link">Nasıl Çalışır</a>
+        <a href="/register" class="nav-link">Kayıt Ol</a>
+        <a href="/login" class="btn-primary">Giriş Yap</a>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-left">
+        <p class="hero-eyebrow">AI Destekli Müşteri Analitiği</p>
+        <h1 class="hero-title">
+            Müşteri Veriniz<br>
+            <em>Bir Hikaye</em><br>
+            Anlatıyor.
+        </h1>
+        <p class="hero-sub">
+            SAYZA, şirketinizin ham satış verisini K-Means kümeleme ve RFM analiziyle
+            aksiyona dönüştürülmüş müşteri segmentlerine çevirir.
+        </p>
+        <div class="hero-cta">
+            <a href="/register" class="btn-primary">Ücretsiz Başla →</a>
+            <a href="#demo" class="btn-ghost">Demo İzle ↓</a>
+        </div>
+    </div>
+
+    <div class="hero-right">
+        <div class="stat-widget">
+            <div class="stat-widget-header">
+                <span class="stat-widget-title">Anlık Analiz</span>
+                <span class="stat-widget-badge">Live</span>
+            </div>
+            <div class="stat-grid">
+                {% set seg_colors = {"Şampiyonlar":"#2563EB","Sadık Müşteriler":"#16A34A","Risk Altındakiler":"#D4845A"} %}
+                {% for row in segment_list %}
+                <div class="stat-cell">
+                    <div class="stat-label">{{ row.Segment_Adi }}</div>
+                    <div class="stat-value" style="color:{{ seg_colors.get(row.Segment_Adi,'#333') }}">{{ row.Musteri_Sayisi }}</div>
+                </div>
+                {% endfor %}
+                <div class="stat-cell">
+                    <div class="stat-label">Ort. Harcama</div>
+                    <div class="stat-value green">
+                        £{% for row in segment_list %}{% if row.Segment_Adi == "Şampiyonlar" %}{{ row.Monetary_Ort|int }}{% endif %}{% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="stat-footer">
+                <span class="live-dot"></span>
+                Online Retail · 4,088 müşteri · k=3 küme
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Problem (dark) -->
+<section class="problem-section">
+    <div class="problem-inner">
+        <p class="problem-tag reveal">Problem</p>
+        <h2 class="problem-quote reveal reveal-delay-1">
+            Müşterilerinizin <em>%80'i kim</em> olduğunu<br>gerçekten biliyor musunuz?
+        </h2>
+        <div class="problem-body reveal reveal-delay-2">
+            <div class="problem-col">
+                <div class="problem-col-title">Mevcut Durum</div>
+                <p class="problem-col-text">
+                    Çoğu şirket verilerini topluyor. CRM'e işliyor, raporlar üretiyor.
+                    Ama bu veriler genellikle spreadsheet'lerde uyuyor —
+                    içindeki deseni kimse göremeden.
+                </p>
+            </div>
+            <div class="problem-col">
+                <div class="problem-col-title">Kayıp Fırsat</div>
+                <p class="problem-col-text">
+                    VIP müşterinize mass e-posta gönderiyorsunuz.
+                    Kaybedilmek üzere olan müşteriyi görmüyorsunuz.
+                    Her müşteriye aynı teklifi sunuyorsunuz.
+                    Gelirin %20'si masada kalıyor.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Demo section -->
+<section class="demo-section" id="demo">
+    <div class="demo-header reveal">
+        <div>
+            <p style="font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:12px;">Ürün Önizleme</p>
+            <h2 class="demo-title">Müşteri<br><em>Segmentasyonu</em></h2>
+        </div>
+        <p class="demo-sub">
+            3 boyutlu RFM uzayında gerçek zamanlı kümeleme.
+            Her nokta bir müşteri.
+        </p>
+    </div>
+
+    <div class="reveal reveal-delay-1">
+        <div class="demo-chart-box">
+            <div class="demo-chart-header">
+                <span class="demo-chart-label">3D RFM Uzayı — Canlı Veri</span>
+                <div class="demo-chart-dots">
+                    <span style="background:#2563EB"></span>
+                    <span style="background:#16A34A"></span>
+                    <span style="background:#D4845A"></span>
+                </div>
+            </div>
+            <div class="demo-chart-inner">{{ grafik|safe }}</div>
+        </div>
+
+        <div class="demo-segments">
+            {% for row in segment_list %}
+            <div class="demo-seg-card">
+                <div class="demo-seg-name">
+                    <span class="demo-seg-dot" style="background:{{ seg_colors.get(row.Segment_Adi,'#ccc') }}"></span>
+                    {{ row.Segment_Adi }}
+                </div>
+                <div class="demo-seg-count">{{ row.Musteri_Sayisi }}</div>
+                <div class="demo-seg-stats">
+                    £{{ row.Monetary_Ort|int }} ort. &nbsp;·&nbsp; {{ row.Recency_Ort|int }} gün
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Numbers -->
+<section class="numbers-section">
+    <div class="number-cell reveal">
+        <div class="number-eyebrow">Analiz Edilen</div>
+        <div class="number-value">4,088</div>
+        <div class="number-desc">Müşteri profili</div>
+    </div>
+    <div class="number-cell reveal reveal-delay-1">
+        <div class="number-eyebrow">Segment</div>
+        <div class="number-value">3</div>
+        <div class="number-desc">Silhouette 0.481 ile doğrulandı</div>
+    </div>
+    <div class="number-cell reveal reveal-delay-2">
+        <div class="number-eyebrow">Stabilite</div>
+        <div class="number-value">%100</div>
+        <div class="number-desc">5 farklı başlangıçta aynı sonuç</div>
+    </div>
+    <div class="number-cell reveal reveal-delay-3">
+        <div class="number-eyebrow">Şampiyonlar Ort.</div>
+        <div class="number-value">£2,941</div>
+        <div class="number-desc">Müşteri başı harcama</div>
+    </div>
+</section>
+
+<!-- How it works -->
+<section class="how-section" id="how">
+    <div class="how-left reveal">
+        <h2 class="how-section-title">Nasıl<br><em>Çalışır</em></h2>
+        <p class="how-section-sub">
+            Ham işlem verisinden aksiyona dönüştürülmüş müşteri segmentlerine
+            dört adımda ulaşırsınız.
+        </p>
+    </div>
+    <div class="how-steps">
+        <div class="how-step reveal">
+            <span class="how-step-num">01</span>
+            <div>
+                <div class="how-step-title">Veriyi Yükle</div>
+                <p class="how-step-text">Online Retail, CRM veya ERP'inizden CSV/Excel olarak satış verinizi sisteme aktarın. Temizleme otomatik yapılır.</p>
+                <span class="how-step-tag">Data Preparation</span>
+            </div>
+        </div>
+        <div class="how-step reveal reveal-delay-1">
+            <span class="how-step-num">02</span>
+            <div>
+                <div class="how-step-title">RFM Analizi</div>
+                <p class="how-step-text">Her müşteri için Recency (yakınlık), Frequency (sıklık) ve Monetary (harcama) skorları hesaplanır. StandardScaler ile normalize edilir.</p>
+                <span class="how-step-tag">Feature Engineering</span>
+            </div>
+        </div>
+        <div class="how-step reveal reveal-delay-2">
+            <span class="how-step-num">03</span>
+            <div>
+                <div class="how-step-title">K-Means Kümeleme</div>
+                <p class="how-step-text">Elbow + Silhouette analizi ile optimal küme sayısı belirlenir. Müşteriler 3 boyutlu RFM uzayında doğal gruplarına ayrılır.</p>
+                <span class="how-step-tag">Machine Learning</span>
+            </div>
+        </div>
+        <div class="how-step reveal reveal-delay-3">
+            <span class="how-step-num">04</span>
+            <div>
+                <div class="how-step-title">Aksiyona Dönüştür</div>
+                <p class="how-step-text">Her segment için pazarlama stratejisi, ürün önerileri ve öncelik skorları otomatik üretilir. Dashboard'dan anlık takip edilir.</p>
+                <span class="how-step-tag">Insights & Recommendations</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA (dark) -->
+<section class="cta-section">
+    <div class="reveal">
+        <h2 class="cta-title">Verileriniz<br>Sizi <em>Bekliyor.</em></h2>
+        <p class="cta-sub">
+            Ücretsiz hesap açın. Verinizi yükleyin.<br>
+            İlk segmentasyonunuzu dakikalar içinde görün.
+        </p>
+    </div>
+    <div class="cta-right reveal reveal-delay-1">
+        <a href="/register" class="btn-cta">Ücretsiz Hesap Aç →</a>
+        <a href="/login" class="btn-cta-ghost">Zaten hesabım var</a>
+        <p class="cta-note">Kredi kartı gerektirmez · 72 saatlik çözüm</p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <a href="/" class="logo">SAY<span class="logo-hl">ZA</span></a>
+    <span>© 2026 SAYZA Analytics. Tüm hakları saklıdır.</span>
+    <span>K-Means · RFM · Silhouette</span>
+</footer>
+
+<script>
+    // Header scroll effect
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Scroll reveal — Intersection Observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

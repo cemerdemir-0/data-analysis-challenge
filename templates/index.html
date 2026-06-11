@@ -14,19 +14,15 @@
             --border: 1px solid #0D0D0D;
             --muted: #6B6B6B;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             background: var(--cream);
             color: var(--ink);
             font-family: 'IBM Plex Sans', sans-serif;
             font-size: 14px;
             line-height: 1.6;
-            min-height: 100vh;
         }
 
-        /* One load animation — reveals sections in sequence */
         @keyframes revealUp {
             from { opacity: 0; transform: translateY(20px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -34,8 +30,10 @@
         .r1 { animation: revealUp 0.5s ease 0.05s both; }
         .r2 { animation: revealUp 0.5s ease 0.2s  both; }
         .r3 { animation: revealUp 0.5s ease 0.35s both; }
+        .r4 { animation: revealUp 0.5s ease 0.5s  both; }
+        .r5 { animation: revealUp 0.5s ease 0.65s both; }
 
-        /* ── Header ── */
+        /* Header */
         header {
             position: sticky; top: 0; z-index: 100;
             background: var(--cream);
@@ -46,43 +44,30 @@
             align-items: center;
             justify-content: space-between;
         }
-
         .logo {
             font-family: 'Fraunces', serif;
             font-weight: 900;
             font-size: 22px;
             letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 0;
         }
-        .logo-highlight {
-            background: var(--green);
-            color: var(--lime);
-            padding: 2px 7px;
-        }
-
+        .logo-highlight { background: var(--green); color: var(--lime); padding: 2px 7px; }
         nav { display: flex; gap: 28px; }
         nav a {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--ink);
-            text-decoration: none;
-            padding-bottom: 2px;
-            border-bottom: 1.5px solid transparent;
-            transition: border-color 0.15s;
+            font-size: 13px; font-weight: 500; color: var(--ink);
+            text-decoration: none; padding-bottom: 2px;
+            border-bottom: 1.5px solid transparent; transition: border-color 0.15s;
         }
-        nav a:hover { border-color: var(--ink); }
-        nav a.active { border-color: var(--green); color: var(--green); }
+        nav a:hover, nav a.active { border-color: var(--ink); }
 
-        /* ── Layout ── */
+        /* Layout */
         .layout {
             display: grid;
             grid-template-columns: 300px 1fr;
             min-height: calc(100vh - 60px);
+            border-bottom: var(--border);
         }
 
-        /* ── Sidebar ── */
+        /* Sidebar */
         .sidebar {
             border-right: var(--border);
             padding: 36px 28px;
@@ -90,150 +75,225 @@
             flex-direction: column;
             gap: 12px;
         }
-
         .sidebar-label {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--green);
-            margin-bottom: 8px;
+            font-size: 10px; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--green); margin-bottom: 4px;
         }
-
-        /* Neo-brutalist metric card */
         .metric-card {
-            background: white;
-            border: var(--border);
-            box-shadow: 3px 3px 0 var(--ink);
-            padding: 18px 20px;
+            background: white; border: var(--border);
+            box-shadow: 3px 3px 0 var(--ink); padding: 18px 20px;
         }
         .metric-card-label {
-            font-size: 10px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 6px;
+            font-size: 10px; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
         }
         .metric-card-value {
-            font-family: 'Fraunces', serif;
-            font-weight: 900;
-            font-size: 44px;
-            line-height: 1;
-            color: var(--green);
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 44px; line-height: 1; color: var(--green);
         }
-        .metric-card-sub {
-            margin-top: 8px;
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.5;
-        }
+        .metric-card-sub { margin-top: 8px; font-size: 12px; color: var(--muted); }
+        .divider { border: none; border-top: var(--border); margin: 8px 0; }
 
-        .divider {
-            border: none;
-            border-top: var(--border);
-            margin: 8px 0;
-        }
-
-        /* Segment cards */
-        .segment-card {
-            border: var(--border);
-            padding: 14px 16px;
-            background: white;
-        }
+        .segment-card { border: var(--border); padding: 14px 16px; background: white; }
         .segment-card + .segment-card { border-top: none; }
-
         .segment-name {
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 600; font-size: 13px; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 8px;
         }
-        .dot {
-            width: 10px; height: 10px;
-            border: 1px solid var(--ink);
-            flex-shrink: 0;
+        .dot { width: 10px; height: 10px; border: 1px solid var(--ink); flex-shrink: 0; }
+        .segment-count {
+            font-family: 'Fraunces', serif; font-size: 28px;
+            font-weight: 700; line-height: 1; margin-bottom: 8px;
         }
-        .dot-champion  { background: #2563EB; }
-        .dot-loyal     { background: #16A34A; }
-        .dot-risk      { background: #D4845A; }
-        .dot-lost      { background: #9CA3AF; }
-
-        .segment-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px 12px;
-            font-size: 11px;
-            color: var(--muted);
-        }
+        .segment-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 11px; color: var(--muted); }
         .segment-stats strong { color: var(--ink); }
 
-        .segment-count {
-            font-family: 'Fraunces', serif;
-            font-size: 28px;
-            font-weight: 700;
-            line-height: 1;
-            margin-bottom: 8px;
+        /* Main */
+        .main { padding: 48px 44px 40px; display: flex; flex-direction: column; gap: 32px; }
+        .headline {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 62px; line-height: 1.0; letter-spacing: -2px;
         }
+        .headline em { font-style: italic; color: var(--green); }
+        .subline { font-size: 15px; color: var(--muted); max-width: 500px; margin-top: 12px; font-weight: 300; }
+        .chart-box { border: var(--border); background: white; }
+        .chart-box-header {
+            padding: 12px 18px; border-bottom: var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .chart-box-title { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--green); }
+        .chart-box-meta { font-size: 11px; color: var(--muted); }
+        .chart-inner { padding: 8px; min-height: 480px; }
+        .chart-inner > div { height: 480px; }
 
-        /* ── Main content ── */
-        .main {
-            padding: 48px 44px 40px;
+        /* ── Segment Insights Section ── */
+        .insights-section {
+            padding: 60px 40px;
+            border-bottom: var(--border);
+        }
+        .section-eyebrow {
+            font-size: 10px; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--green); margin-bottom: 12px;
+        }
+        .section-title {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 42px; letter-spacing: -1.5px; margin-bottom: 40px;
+        }
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            border: var(--border);
+        }
+        .insight-card {
+            padding: 28px 24px;
+            border-right: var(--border);
+            background: white;
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            gap: 16px;
         }
+        .insight-card:last-child { border-right: none; }
 
-        .headline {
-            font-family: 'Fraunces', serif;
-            font-weight: 900;
-            font-size: 62px;
-            line-height: 1.0;
-            letter-spacing: -2px;
+        .insight-header {
+            display: flex; align-items: flex-start;
+            justify-content: space-between; gap: 12px;
         }
-        .headline em {
-            font-style: italic;
-            color: var(--green);
-        }
-
-        .subline {
-            font-size: 15px;
-            color: var(--muted);
-            max-width: 500px;
-            margin-top: 12px;
-            font-weight: 300;
-        }
-
-        /* Chart container */
-        .chart-box {
+        .insight-icon {
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; flex-shrink: 0;
             border: var(--border);
-            background: white;
+        }
+        .insight-name {
+            font-family: 'Fraunces', serif;
+            font-size: 20px; font-weight: 700; line-height: 1.1;
             flex: 1;
         }
-        .chart-box-header {
-            padding: 12px 18px;
-            border-bottom: var(--border);
-            display: flex;
-            align-items: center;
+        .priority-badge {
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            padding: 3px 8px; border: var(--border);
+            white-space: nowrap;
+        }
+
+        .insight-metrics {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .insight-metric {
+            background: var(--cream);
+            padding: 8px 10px;
+        }
+        .insight-metric-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+        .insight-metric-value { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; }
+
+        .insight-text { font-size: 13px; color: #444; line-height: 1.6; }
+
+        .insight-action {
+            border-left: 3px solid;
+            padding: 10px 14px;
+            font-size: 12px;
+            line-height: 1.6;
+            background: var(--cream);
+        }
+        .insight-action-label {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 4px; color: var(--muted);
+        }
+
+        .products-list { display: flex; flex-direction: column; gap: 4px; }
+        .products-label {
+            font-size: 9px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--muted); margin-bottom: 6px;
+        }
+        .product-row {
+            display: flex; align-items: center;
             justify-content: space-between;
+            padding: 6px 10px;
+            border: var(--border);
+            font-size: 12px;
+            background: white;
         }
-        .chart-box-title {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--green);
+        .product-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 8px; }
+        .product-qty { font-weight: 600; font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+        /* ── Customer Search Section ── */
+        .search-section {
+            padding: 60px 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+            border-bottom: var(--border);
         }
-        .chart-box-meta {
-            font-size: 11px;
-            color: var(--muted);
+        .search-left {}
+        .search-title {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 42px; letter-spacing: -1.5px; margin-bottom: 12px;
         }
-        .chart-inner {
-            padding: 8px;
-            min-height: 480px;
+        .search-title em { font-style: italic; color: var(--green); }
+        .search-sub { font-size: 14px; color: var(--muted); font-weight: 300; margin-bottom: 32px; }
+
+        .search-form { display: flex; gap: 0; }
+        .search-input {
+            flex: 1;
+            background: white;
+            border: var(--border);
+            border-right: none;
+            padding: 14px 18px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 16px;
+            color: var(--ink);
+            outline: none;
         }
-        .chart-inner > div { height: 480px; }
+        .search-input::placeholder { color: #aaa; }
+        .search-btn {
+            background: var(--ink); color: var(--cream);
+            border: var(--border);
+            box-shadow: 4px 4px 0 var(--green);
+            padding: 14px 24px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 13px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase;
+            cursor: pointer; white-space: nowrap;
+            transition: box-shadow 0.1s, transform 0.1s;
+        }
+        .search-btn:hover { box-shadow: 6px 6px 0 var(--green); }
+        .search-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--green); }
+
+        .search-hint { font-size: 12px; color: var(--muted); margin-top: 12px; }
+        .search-hint code {
+            background: white; border: var(--border);
+            padding: 1px 6px; font-size: 11px;
+        }
+
+        .search-right {
+            border: var(--border);
+            background: white;
+            padding: 24px;
+        }
+        .sample-label {
+            font-size: 10px; font-weight: 600;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--green); margin-bottom: 16px;
+        }
+        .sample-grid { display: flex; flex-direction: column; gap: 8px; }
+        .sample-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 12px; border: var(--border);
+            font-size: 13px; cursor: pointer;
+            text-decoration: none; color: var(--ink);
+            transition: background 0.1s;
+        }
+        .sample-row:hover { background: var(--cream); }
+        .sample-id { font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; }
+        .sample-segment { font-size: 11px; color: var(--muted); }
+        .sample-arrow { font-size: 16px; color: var(--muted); }
     </style>
 </head>
 <body>
@@ -241,77 +301,158 @@
 <header class="r1">
     <div class="logo">SAY<span class="logo-highlight">ZA</span></div>
     <nav>
-        <a href="/" class="active">Dashboard</a>
-        <a href="/register">Kayıt Ol</a>
+        <a href="/dashboard" class="active">Dashboard</a>
+        <a href="/time-series">Zaman Serisi</a>
+        <a href="/logout">Çıkış</a>
     </nav>
 </header>
 
+<!-- Dashboard grid -->
 <div class="layout">
-
-    <!-- Sidebar -->
     <aside class="sidebar r2">
         <p class="sidebar-label">Analiz Özeti</p>
-
         <div class="metric-card">
             <div class="metric-card-label">Toplam Müşteri</div>
             <div class="metric-card-value">{{ toplam_musteri }}</div>
-            <div class="metric-card-sub">
-                {{ n_clusters }} segment &nbsp;·&nbsp; K-Means (k={{ n_clusters }})
-            </div>
+            <div class="metric-card-sub">{{ n_clusters }} segment &nbsp;·&nbsp; K-Means (k={{ n_clusters }})</div>
         </div>
-
         <hr class="divider">
         <p class="sidebar-label">Segmentler</p>
-
-        {% set dot_map = {
-            "Şampiyonlar":      "dot-champion",
-            "Sadık Müşteriler": "dot-loyal",
-            "Risk Altındakiler":"dot-risk",
-            "Kaybedilenler":    "dot-lost"
-        } %}
-
+        {% set dot_colors = {"Şampiyonlar":"#2563EB","Sadık Müşteriler":"#16A34A","Risk Altındakiler":"#D4845A","Kaybedilenler":"#9CA3AF"} %}
         <div>
         {% for row in segment_list %}
         <div class="segment-card">
             <div class="segment-name">
-                <span class="dot {{ dot_map.get(row.Segment_Adi, '') }}"></span>
+                <span class="dot" style="background:{{ dot_colors.get(row.Segment_Adi,'#ccc') }}"></span>
                 {{ row.Segment_Adi }}
             </div>
             <div class="segment-count">{{ row.Musteri_Sayisi }}</div>
             <div class="segment-stats">
-                <span>Recency</span>
-                <strong>{{ "%.0f"|format(row.Recency_Ort) }} gün</strong>
-                <span>Frekans</span>
-                <strong>{{ "%.1f"|format(row.Frequency_Ort) }} fatura</strong>
-                <span>Harcama</span>
-                <strong>£{{ "%.0f"|format(row.Monetary_Ort) }}</strong>
+                <span>Recency</span><strong>{{ "%.0f"|format(row.Recency_Ort) }} gün</strong>
+                <span>Frekans</span><strong>{{ "%.1f"|format(row.Frequency_Ort) }} fatura</strong>
+                <span>Harcama</span><strong>£{{ "%.0f"|format(row.Monetary_Ort) }}</strong>
             </div>
         </div>
         {% endfor %}
         </div>
     </aside>
 
-    <!-- Main -->
     <main class="main r3">
         <div>
             <h1 class="headline">Müşteri<br><em>Segmentasyonu</em></h1>
-            <p class="subline">
-                RFM analizi ve K-Means kümeleme ile {{ toplam_musteri }} müşteri
-                {{ n_clusters }} anlamlı segmente ayrıldı.
-            </p>
+            <p class="subline">RFM analizi ve K-Means kümeleme ile {{ toplam_musteri }} müşteri {{ n_clusters }} anlamlı segmente ayrıldı.</p>
         </div>
-
         <div class="chart-box">
             <div class="chart-box-header">
                 <span class="chart-box-title">3D RFM Uzayında Kümeleme</span>
                 <span class="chart-box-meta">Recency · Frequency · Monetary</span>
             </div>
-            <div class="chart-inner">
-                {{ grafik|safe }}
-            </div>
+            <div class="chart-inner">{{ grafik|safe }}</div>
         </div>
     </main>
-
 </div>
+
+<!-- Segment Insights -->
+<section class="insights-section r4">
+    <p class="section-eyebrow">Aksiyon Rehberi</p>
+    <h2 class="section-title">Segment Stratejileri</h2>
+
+    <div class="insights-grid">
+    {% for seg in segment_insights %}
+    <div class="insight-card">
+        <div class="insight-header">
+            <div class="insight-icon" style="background:{{ seg.color }}; color:white;">{{ seg.icon }}</div>
+            <div class="insight-name">{{ seg.name }}</div>
+            <div class="priority-badge" style="background:{{ seg.priority_color }}; color:white;">{{ seg.priority }}</div>
+        </div>
+
+        <div class="insight-metrics">
+            <div class="insight-metric">
+                <div class="insight-metric-label">Müşteri</div>
+                <div class="insight-metric-value">{{ seg.count }}</div>
+            </div>
+            <div class="insight-metric">
+                <div class="insight-metric-label">Ort. Harcama</div>
+                <div class="insight-metric-value">£{{ seg.monetary_avg|int }}</div>
+            </div>
+        </div>
+
+        <p class="insight-text">{{ seg.insight }}</p>
+
+        <div class="insight-action" style="border-color:{{ seg.color }}">
+            <div class="insight-action-label">Önerilen Aksiyon</div>
+            {{ seg.action }}
+        </div>
+
+        <div class="products-list">
+            <div class="products-label">Bu Segmentin Top Ürünleri</div>
+            {% for p in seg.products %}
+            <div class="product-row">
+                <span class="product-name">{{ p.urun | title }}</span>
+                <span class="product-qty">{{ "{:,}".format(p.adet|int) }} adet</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+</section>
+
+<!-- Customer Search -->
+<section class="search-section r5">
+    <div class="search-left">
+        <p class="section-eyebrow">Kişisel Analiz</p>
+        <h2 class="search-title">Müşteri<br><em>Ara</em></h2>
+        <p class="search-sub">CustomerID gir — segment bilgisi, RFM skoru ve kişisel ürün önerilerini gör.</p>
+
+        <form action="" method="GET" onsubmit="goToCustomer(event)">
+            <div class="search-form">
+                <input type="number" class="search-input" id="customerInput" placeholder="Örn: 17850" min="1">
+                <button type="submit" class="search-btn">Analiz Et →</button>
+            </div>
+        </form>
+        <p class="search-hint">Dataset'te <code>CustomerID</code> sütununu kullan. Örnek: <code>17850</code>, <code>14688</code>, <code>12748</code></p>
+    </div>
+
+    <div class="search-right">
+        <p class="sample-label">Örnek Müşteriler</p>
+        <div class="sample-grid">
+            {% for seg in segment_insights %}
+            {% if seg.products %}
+            <a href="/customer/{{ seg.count }}" class="sample-row" onclick="event.preventDefault(); document.getElementById('customerInput').value=''; window.location='/customer/{{ loop.index * 1000 + 17850 }}'">
+            </a>
+            {% endif %}
+            {% endfor %}
+            <a href="/customer/17850" class="sample-row">
+                <span class="sample-id">17850</span>
+                <span class="sample-segment">Müşteri detayını gör</span>
+                <span class="sample-arrow">→</span>
+            </a>
+            <a href="/customer/14688" class="sample-row">
+                <span class="sample-id">14688</span>
+                <span class="sample-segment">Müşteri detayını gör</span>
+                <span class="sample-arrow">→</span>
+            </a>
+            <a href="/customer/12748" class="sample-row">
+                <span class="sample-id">12748</span>
+                <span class="sample-segment">Müşteri detayını gör</span>
+                <span class="sample-arrow">→</span>
+            </a>
+            <a href="/customer/15311" class="sample-row">
+                <span class="sample-id">15311</span>
+                <span class="sample-segment">Müşteri detayını gör</span>
+                <span class="sample-arrow">→</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+function goToCustomer(e) {
+    e.preventDefault();
+    const id = document.getElementById('customerInput').value;
+    if (id) window.location.href = '/customer/' + id;
+}
+</script>
 </body>
 </html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAYZA | Giriş Yap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F2EDE4; --ink: #0D0D0D; --green: #1C3D2E;
+            --lime: #C8F135; --border: 1px solid #0D0D0D; --muted: #6B6B6B; --error: #C0392B;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--ink); color: var(--cream);
+            font-family: 'IBM Plex Sans', sans-serif; font-size: 14px;
+            min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+        }
+
+        /* Left: brand panel */
+        .brand-panel {
+            background: var(--green);
+            padding: 48px;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+        }
+        .brand-logo {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 24px; letter-spacing: -0.5px; text-decoration: none; color: var(--cream);
+        }
+        .brand-logo span { background: var(--lime); color: var(--ink); padding: 2px 8px; }
+        .brand-headline {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 52px; line-height: 1.05; letter-spacing: -2px;
+        }
+        .brand-headline em { font-style: italic; color: var(--lime); }
+        .brand-tagline { font-size: 15px; color: rgba(255,255,255,0.6); margin-top: 16px; font-weight: 300; }
+        .brand-stats { display: flex; gap: 32px; }
+        .brand-stat-num {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 28px; color: var(--lime); line-height: 1;
+        }
+        .brand-stat-label { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+        /* Right: form panel */
+        .form-panel {
+            background: var(--cream); color: var(--ink);
+            padding: 48px 60px;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .form-eyebrow {
+            font-size: 10px; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--green); margin-bottom: 16px;
+        }
+        .form-title {
+            font-family: 'Fraunces', serif; font-weight: 900;
+            font-size: 48px; letter-spacing: -2px; line-height: 1; margin-bottom: 40px;
+        }
+        .form-title em { font-style: italic; color: var(--green); }
+
+        .flash { padding: 12px 16px; border: var(--border); margin-bottom: 24px; font-size: 13px; font-weight: 500; }
+        .flash.success { background: var(--lime); }
+        .flash.danger  { background: #FFD6D6; }
+        .flash.info    { background: #E8F4FD; }
+
+        .form-group { margin-bottom: 24px; }
+        label {
+            display: block; font-size: 10px; font-weight: 600;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            color: var(--green); margin-bottom: 8px;
+        }
+        input[type="email"], input[type="password"], input[type="text"] {
+            width: 100%; background: transparent; border: none;
+            border-bottom: 2px solid var(--ink); padding: 10px 0;
+            font-family: 'IBM Plex Sans', sans-serif; font-size: 16px;
+            color: var(--ink); outline: none; transition: border-color 0.15s;
+        }
+        input:focus { border-color: var(--green); }
+        .field-error { font-size: 12px; color: var(--error); margin-top: 6px; }
+
+        .form-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        .remember-label { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+        .remember-label input[type="checkbox"] { width: 14px; height: 14px; }
+
+        .submit-btn {
+            width: 100%; background: var(--ink); color: var(--cream);
+            border: var(--border); box-shadow: 4px 4px 0 var(--green);
+            padding: 14px 24px; font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
+            text-transform: uppercase; cursor: pointer;
+            transition: box-shadow 0.1s, transform 0.1s;
+        }
+        .submit-btn:hover { box-shadow: 6px 6px 0 var(--green); }
+        .submit-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--green); }
+
+        .form-footer { margin-top: 24px; font-size: 13px; color: var(--muted); text-align: center; }
+        .form-footer a { color: var(--green); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--green); }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; color: var(--muted); text-decoration: none;
+            margin-bottom: 40px; border-bottom: 1px solid transparent;
+        }
+        .back-link:hover { color: var(--ink); border-color: var(--ink); }
+    </style>
+</head>
+<body>
+
+<div class="brand-panel">
+    <a href="/" class="brand-logo">SAY<span>ZA</span></a>
+    <div>
+        <h2 class="brand-headline">Veri ile<br><em>Karar Ver.</em></h2>
+        <p class="brand-tagline">Yapay zeka destekli müşteri segmentasyonu ile rekabet avantajı yarat.</p>
+    </div>
+    <div class="brand-stats">
+        <div>
+            <div class="brand-stat-num">4,088</div>
+            <div class="brand-stat-label">Müşteri Profili</div>
+        </div>
+        <div>
+            <div class="brand-stat-num">0.481</div>
+            <div class="brand-stat-label">Silhouette Score</div>
+        </div>
+        <div>
+            <div class="brand-stat-num">3</div>
+            <div class="brand-stat-label">Segment</div>
+        </div>
+    </div>
+</div>
+
+<div class="form-panel">
+    <a href="/" class="back-link">← Ana sayfaya dön</a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <p class="form-eyebrow">Hesabınıza Erişin</p>
+    <h1 class="form-title">Giriş<br><em>Yap</em></h1>
+
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(placeholder="ornek@sirket.com") }}
+            {% for error in form.email.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(placeholder="••••••••") }}
+            {% for error in form.password.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="form-row">
+            <label class="remember-label">
+                {{ form.remember() }} Beni Hatırla
+            </label>
+        </div>
+
+        {{ form.submit(class="submit-btn") }}
+    </form>
+
+    <p class="form-footer">Hesabın yok mu? <a href="/register">Kayıt Ol</a></p>
+</div>
+
+</body>
+</html>

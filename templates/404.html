@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>SAYZA | Müşteri Bulunamadı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,900;1,900&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --cream:#F2EDE4; --ink:#0D0D0D; --green:#1C3D2E; --lime:#C8F135; --border:1px solid #0D0D0D; }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { background:var(--cream); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; }
+        .logo { font-family:'Fraunces',serif; font-weight:900; font-size:22px; }
+        .logo span { background:var(--green); color:var(--lime); padding:2px 7px; }
+        .num { font-family:'Fraunces',serif; font-weight:900; font-size:120px; line-height:1; letter-spacing:-4px; color:var(--green); }
+        .msg { font-size:16px; color:#555; }
+        .back {
+            display:inline-flex; align-items:center; gap:8px;
+            background:var(--ink); color:var(--cream);
+            border:var(--border); box-shadow:4px 4px 0 var(--green);
+            padding:12px 24px; text-decoration:none;
+            font-size:13px; font-weight:600; letter-spacing:1px; text-transform:uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">SAY<span>ZA</span></div>
+    <div class="num">404</div>
+    <p class="msg">Bu CustomerID veri setinde bulunamadı.</p>
+    <a href="/" class="back">← Dashboard'a Dön</a>
+</body>
+</html>
